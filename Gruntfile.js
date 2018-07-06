@@ -2,10 +2,10 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
   	files:{
-  		server: ['./app.js', './server/routes/*.js', './bin/www'],
+  		server: ['./app.js', './app_server/routes/*.js', './bin/www'],
   		compass: ['./compass/*.scss'],
   		livereload: [
-  			'./server/views/*.pug', './public/css/style.css', './public/js/**/*.js', './public/js/*.js'
+  			'./app_server/views/*.pug', './public/css/style.css', './public/js/**/*.js', './public/js/*.js'
 
   			],
 		concat: ['./public/js/*.js', './public/js/**/*js'],
