@@ -24,7 +24,7 @@ var locationSchema = new mongoose.Schema({
     reviews: [reviewSchema]
 });
 
-mongoose.model('Location', 'locationSchema', 'locations');
+mongoose.model('Location', locationSchema, 'locations');
 /*
 db.locations.save({
     name: "Starcups",
