@@ -1,6 +1,23 @@
 var mongoose = require('mongoose');
 var loc = mongoose.model('Location');
 
+var theEarth = (function(){
+    var earthRadius = 6371;
+
+    var getDistanceFromRads = function(rads){
+        return parseFloat(rads * earthRadius);
+    };
+
+    var getRadsFromDistance = function(distance){
+        return parseFloat(distance / earthRadius);
+    }
+
+    return {
+        getRadsFromDistance: getRadsFromDistance,
+        getDistanceFromRads: getDistanceFromRads
+    };
+})();
+
 var sendResp = function(res, status, content){
     res.status(200);
     res.json(content);
@@ -12,7 +29,18 @@ module.exports.locationsCreate = function(req, res){
     sendResp(res, 200, {"status": req.body});
 };
 module.exports.locationsListByDistance = function(req, res){
-    sendResp(res, 200, {"status": "success"});
+    var lng = parseFloat(req.query.lng);
+    var lat = parseFloat(req.query.lat);
+    var point = {
+        type: "Point",
+        coordinates: [lng, lat]
+    };
+    var geoOptions = {
+        spherical: true,
+        maxDistance: theEarth.getRadsFromDistance(20),
+        num: 10
+    }
+    loc.geoNear(point, geoOptions, callback);
 };
 module.exports.locationsReadOne = function(req, res){
     if(req.params && req.params.locationid){

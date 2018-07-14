@@ -1,5 +1,7 @@
 var mongoose = require('mongoose');
 
+
+
 var reviewSchema = new mongoose.Schema({
     author: String,
     rating: {type: Number, required: true, min: 0, max: 5},
@@ -46,18 +48,29 @@ db.locations.save({
     },{
         days: 'Sunday',
         closed: true
-    }],
-    reviews: [{
-        rating: 5,
-        author: "Simon Holmes",
-        date: "16 July 2013",
-        review: "What a great place. I can't say enough good things about it"
-    },{
-        rating: 3,
-        author: "Simon Holmes",
-        date: "17 July 2013",
-        review: "It was ok. Coffe wasn't great, but the wifi was fast."
     }]
+});
+db.locations.update({name: "Starcups"}, {
+    $push:{
+        reviews:{
+            rating: 5,
+            _id: ObjectId(),
+            author: "Simon Holmes",
+            timestamp: Date("Jul 16, 2013"),
+            reviewText: "What a great place. I can't say enough good things about it"
+        }
+    }
+});
+db.locations.update({name: "Starcups"}, {
+    $push:{
+        reviews:{
+            rating: 3,
+            _id: ObjectId(),
+            author: "Simon Holmes",
+            timestamp: Date("Jul 17, 2013"),
+            reviewText: "It was ok. Coffe wasn't great, but the wifi was fast."
+        }
+    }
 });
 db.locations.save({
     name: "Coffe Hero",
