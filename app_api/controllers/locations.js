@@ -39,8 +39,26 @@ module.exports.locationsListByDistance = function(req, res){
         spherical: true,
         maxDistance: theEarth.getRadsFromDistance(20),
         num: 10
-    }
-    loc.geoNear(point, geoOptions, callback);
+    };
+    loc.geoNear(point, geoOptions, function(err, results, stats){
+        var locations = [];
+        if(err){
+            sendResp(res, 404, err);
+        }else{
+            results.foreach(function(doc){
+                locations.push({
+                    distance: theEarth.getDistanceFromRads(doc.dist),
+                    name: doc.obj.name,
+                    address: doc.obj.address,
+                    rating: doc.obj.rating,
+                    facilities: doc.obj.facilities,
+                    _id: doc.obj._id
+                });
+            });
+            sendResp(res, 200, locations);
+        }
+        
+    });
 };
 module.exports.locationsReadOne = function(req, res){
     if(req.params && req.params.locationid){
