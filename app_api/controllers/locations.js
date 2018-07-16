@@ -40,7 +40,17 @@ module.exports.locationsListByDistance = function(req, res){
         maxDistance: theEarth.getRadsFromDistance(20),
         num: 10
     };
-    loc.geoNear(point, geoOptions, function(err, results, stats){
+    loc.aggregate( 
+        [{
+            '$geoNear': {
+                'near': {'type':'Point', 'coordinates':[lng, lat]},
+                'spherical': true,
+                'maxdistance': theEarth.getRadsFromDistance(20),
+                'num':10,
+                'distanceField': 'dist' 
+            }
+        }],
+        function(err, results){
         var locations = [];
         if(err){
             sendResp(res, 404, err);
