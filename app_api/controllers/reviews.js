@@ -8,7 +8,32 @@ var sendResp = function(res, status, content){
 };
 
 module.exports.reviewsCreate = function(req, res){
-    sendResp(res, 200, {"status": "success"});
+    var locationId = req.params.locationid;
+    if(locationId){
+        loc.findById(locationId).select('reviews').exec(function(err, location){
+            if(err){
+                sendResp(res, 400, err);
+            }else{
+                location.reviews.push({
+                    author: req.body.author,
+                    rating: req.body.rating,
+                    reviewText: req.body.reviewText
+                });
+                location.save(function(err, updatedLoc){
+                    var newRev;
+                    if(err){
+                        sendResp(res, 400, err);
+                    }else{
+                        newRev = location.reviews[location.reviews.length - 1];
+                        sendResp(res, 200, newRev);
+                    }
+                });
+            }
+        });
+
+    }else{
+        sendResp(res, 404, {"message": "Location not found."})
+    }
 };
 module.exports.reviewsReadOne = function(req, res){
     if(req.params && req.params.locationid && req.params.reviewsid){
