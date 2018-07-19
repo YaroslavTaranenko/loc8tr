@@ -104,7 +104,7 @@ module.exports.reviewsReadOne = function(req, res){
 };
 module.exports.reviewsUpdateOne = function(req, res){
     if(!req.params.locationid || !req.params.reviewsid){
-        sendResp(res, 404, {"message", 'Not found, locationid and reviewsid is required.'});
+        sendResp(res, 404, {"message": 'Not found, locationid and reviewsid is required.'});
         return;
     }
     loc.findById(req.params.locationid).select("reviews").exec(function(err, result){
@@ -142,7 +142,7 @@ module.exports.reviewsUpdateOne = function(req, res){
 };
 module.exports.reviewsDeleteOne = function(req, res){
     if(!req.params.locationid || !req.params.reviewsid){
-        sendResp(res, 404, {"message", 'Not found, locationid and reviewsid is required.'});
+        sendResp(res, 404, {"message": 'Not found, locationid and reviewsid is required.'});
         return;
     }
     loc.findById(req.params.locationid).select("reviews").exec(function(err, result){

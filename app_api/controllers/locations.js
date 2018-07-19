@@ -84,7 +84,7 @@ module.exports.locationsReadOne = function(req, res){
 };
 module.exports.locationsUpdateOne = function(req, res){
     if(!req.params.locationid){
-        sendResp(res, 404, {"message", 'Not found, locationid is required.'});
+        sendResp(res, 404, {"message": 'Not found, locationid is required.'});
         return;
     }
     loc.findById(req.params.locationid).select("-reviews -rating").exec(function(err, result){

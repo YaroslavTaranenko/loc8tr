@@ -1,3 +1,8 @@
+var request = require('request');
+var apiOptions = {
+	server: "http://localhost:3000"
+}
+
 module.exports.homelist = function(req, res){
 	res.render('locations-list', {
 		title: 'Loc8tr - find a place to work with wifi',
