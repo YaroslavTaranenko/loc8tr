@@ -3,33 +3,19 @@ var apiOptions = {
 	server: "http://localhost:3000"
 }
 var renderHomePage = function(req, res){
-	res.render('locations-list', {
-		title: 'Loc8tr - find a place to work with wifi',
-		pageHeader:{
-			title: 'Loc8tr',
-			strapline: 'find a place to work with wifi near you!'
-		},
-        sidebar: "Loc8tr helps you to find places to work when out and about.",
-		locations: [{
-			name: "Starcups",
-            address: "125 High Street, Reading, rg-7, 1PS",
-            rating: 0,
-            facilities: ["Hot drinks", "Food", "Premium WIFI"],
-            distance: "100m"
-		},{
-            name: "Coffe hero",
-            address: "125 High Street, Reading, rg-7, 1PS",
-            rating: 3,
-            facilities: ["Hot drinks", "Food", "Premium WIFI"],
-            distance: "200m"
-		},{
-            name: "Burger quin",
-            address: "125 High Street, Reading, rg-7, 1PS",
-            rating: 5,
-            facilities: ["Hot drinks", "Food", "Premium WIFI"],
-            distance: "450m"
-		}]
-
+	var path = "/api/locations";
+	var requestOptions = {
+		url: apiOptions.server + path,
+		method: "GET",
+		json: {},
+		qs: {
+			lng: -0.7992599,
+			lat: 51.3780911,
+			maxDistance: 20
+		}
+	};
+	request(requestOptions, function(err, response, body){
+		renderHomePage(req, res);
 	});
 };
 
