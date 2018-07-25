@@ -59,7 +59,7 @@ module.exports.locationsListByDistance = function(req, res){
                 sendResp(res, 404, "Locations not found");
                 return;
             }else{
-                sendResp(res, 200, {'locations': result});
+                sendResp(res, 200, result);
             }
         }
     });

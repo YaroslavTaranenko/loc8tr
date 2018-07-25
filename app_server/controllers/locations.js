@@ -2,7 +2,29 @@ var request = require('request');
 var apiOptions = {
 	server: "http://localhost:3000"
 }
-var renderHomePage = function(req, res){
+var renderHomePage = function(req, res, responseBody){
+	var message;
+	if(!(responseBody instanceof Array)){
+		message = "API lookup error.";
+		responseBody = [];
+	}else{
+		if(!responseBody.length){
+			message: "No places found near you.";
+		}
+	}
+	res.render('locations-list', {
+		title: 'Loc8tr - find a place to work with WIFI.',
+		pageHeader: {
+			title: "Loc8tr",
+			strapline: "Find places to work with WIFI near you"
+		},
+		sidebar: "Looking for wifi and a seat? Loc8tr helps you find places to work when out and about. Perhaps with coffee, cake or pint? Let Loc8tr help you find the place you're looking for.",
+		locations: responseBody,
+		message: message
+	});
+};
+
+module.exports.homelist = function(req, res){
 	var path = "/api/locations";
 	var requestOptions = {
 		url: apiOptions.server + path,
@@ -15,12 +37,8 @@ var renderHomePage = function(req, res){
 		}
 	};
 	request(requestOptions, function(err, response, body){
-		renderHomePage(req, res);
+		renderHomePage(req, res, body);
 	});
-};
-
-module.exports.homelist = function(req, res){
-	renderHomePage(req, res);
 };
 
 module.exports.locationInfo = function(req, res){
