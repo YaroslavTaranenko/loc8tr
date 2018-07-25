@@ -71,7 +71,7 @@ module.exports.locationsReadOne = function(req, res){
                 sendResp(res, 404, {"message": "Location not found"});
                 return;
             }else if(err){
-                sendResp(res, 404, err);
+                sendResp(res, 400, err);
                 return
             }
             sendResp(res, 200, location);

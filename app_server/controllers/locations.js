@@ -23,7 +23,36 @@ var renderHomePage = function(req, res, responseBody){
 		message: message
 	});
 };
-
+var renderDetailPage = function(req, res, responseBody){
+	/*var message;
+	if(!(responseBody instanceof Array)){
+		message = "API lookup error.";
+		responseBody = [];
+	}else{
+		if(!responseBody.length){
+			message: "No places found near you.";
+		}
+	}*/
+	res.render('location-info', {
+	    title: 'Loc8tr - starcups',
+        sidebar: "Simon's caffe is on loc8tr because it has accessible wifi and space to sit down with you laptop and get some work done.",
+        sidebarSmall: "If you have been and you like it - or if you don't - please leave the review to help other people just like you",
+        location: responseBody,
+        //message: message
+	});
+};
+var _showError = function(req, res, status){
+	var title, content;
+	if(status === 404){
+		title = "404, page not found";
+		content = "Oh dear. Looks like we can't find this page. Sorry.";
+	}else{
+		title = status + ", something's gone wrong.";
+		content = "Something, somewere, has gone just a little bit wrong.";	
+	}
+	res.status = status;
+	res.render('generic-text', {title: title, content: content});
+};
 module.exports.homelist = function(req, res){
 	var path = "/api/locations";
 	var requestOptions = {
@@ -42,31 +71,23 @@ module.exports.homelist = function(req, res){
 };
 
 module.exports.locationInfo = function(req, res){
-	res.render('location-info', {
-	    title: 'Loc8tr - starcups',
-        sidebar: "Simon's caffe is on loc8tr because it has accessible wifi and space to sit down with you laptop and get some work done.",
-        sidebarSmall: "If you have been and you like it - or if you don't - please leave the review to help other people just like you",
-        location: {
-	        name: "Starcups",
-            address: "125 High Street, Reading, rg-7, 1PS",
-            rating: 0,
-            workTimes: ["Monday - Friday: 7:00am - 7:00pm", "Saturday: 8:00am - 5:00pm", "Sunday: closed"],
-            facilities: ["Hot drinks", "Food", "Premium WIFI"],
-            distance: "100m",
-            map: "http://maps.googleapis.com/maps/api/staticmap?center=51.455041,-0.9690884&zoom=17&size=400x350&sensor=false&markers=51.455041,-0.9690884&scale=2",
-
-            reviews: [{
-	            rating: 5,
-                author: "Simon Holmes",
-                date: "16 July 2013",
-                review: "What a great place. I can't say enough good things about it"
-            },{
-                rating: 3,
-                author: "Simon Holmes",
-                date: "17 July 2013",
-                review: "It was ok. Coffe wasn't great, but the wifi was fast."
-            }]
-        }
+	var path = "/api/locations/" + req.params.locationid;
+	var requestOptions = {
+		url: apiOptions.server + path,
+		method: "GET",
+		json: {},
+		qs: {
+			lng: -0.7992599,
+			lat: 51.3780911,
+			maxDistance: 20
+		}
+	};
+	request(requestOptions, function(err, response, body){
+		if(response.statusCode == 200){
+			renderDetailPage(req, res, body);			
+		}else{
+			_showError(req, res, response.statusCode);
+		}
 	});
 };
 
