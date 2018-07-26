@@ -12,6 +12,7 @@ var renderHomePage = function(req, res, responseBody){
 			message: "No places found near you.";
 		}
 	}
+	res.status = 200;
 	res.render('locations-list', {
 		title: 'Loc8tr - find a place to work with WIFI.',
 		pageHeader: {
@@ -24,15 +25,7 @@ var renderHomePage = function(req, res, responseBody){
 	});
 };
 var renderDetailPage = function(req, res, responseBody){
-	/*var message;
-	if(!(responseBody instanceof Array)){
-		message = "API lookup error.";
-		responseBody = [];
-	}else{
-		if(!responseBody.length){
-			message: "No places found near you.";
-		}
-	}*/
+	
 	res.render('location-info', {
 	    title: 'Loc8tr - starcups',
         sidebar: "Simon's caffe is on loc8tr because it has accessible wifi and space to sit down with you laptop and get some work done.",
@@ -72,15 +65,12 @@ module.exports.homelist = function(req, res){
 
 module.exports.locationInfo = function(req, res){
 	var path = "/api/locations/" + req.params.locationid;
+
 	var requestOptions = {
 		url: apiOptions.server + path,
 		method: "GET",
 		json: {},
-		qs: {
-			lng: -0.7992599,
-			lat: 51.3780911,
-			maxDistance: 20
-		}
+		qs: {}
 	};
 	request(requestOptions, function(err, response, body){
 		if(response.statusCode == 200){

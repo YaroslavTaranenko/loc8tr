@@ -19,8 +19,9 @@ var theEarth = (function(){
 })();
 
 var sendResp = function(res, status, content){
-    res.status(200);
+    res.status(status);
     res.json(content);
+    res.end();
 };
 
 
@@ -67,14 +68,20 @@ module.exports.locationsListByDistance = function(req, res){
 module.exports.locationsReadOne = function(req, res){
     if(req.params && req.params.locationid){
         loc.findById(req.params.locationid).exec(function(err, location){
+            //console.log(location);
             if(!location){
+                console.log("No location (404)");
                 sendResp(res, 404, {"message": "Location not found"});
                 return;
             }else if(err){
+                console.log("Location error (400)");
                 sendResp(res, 400, err);
                 return
+            }else{
+                console.log("Location is ok (200)");
+                sendResp(res, 200, location);
             }
-            sendResp(res, 200, location);
+            
         });
     }else{
         sendResp(res, 404, {"message": "Locationid not defined"});
