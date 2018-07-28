@@ -3,7 +3,7 @@ var loc = mongoose.model('Location');
 var ObjectID = require('mongodb').ObjectID;
 
 var sendResp = function(res, status, content){
-    res.status(200);
+    res.status(status);
     res.json(content);
 };
 
@@ -54,7 +54,7 @@ module.exports.reviewsCreate = function(req, res){
                     }else{
                         updateAverageRating(updatedLoc._id);
                         newRev = location.reviews[location.reviews.length - 1];
-                        sendResp(res, 200, newRev);
+                        sendResp(res, 201, newRev);
                     }
                 });
             }

@@ -3,9 +3,9 @@ var mongoose = require('mongoose');
 
 
 var reviewSchema = new mongoose.Schema({
-    author: String,
+    author: {type: String, required: true},
     rating: {type: Number, required: true, min: 0, max: 5},
-    reviewText: String,
+    reviewText: {type: String, required: true},
     createdOn: { type: Date, default: Date.now }
 });
 
@@ -56,7 +56,7 @@ db.locations.update({name: "Starcups"}, {
             rating: 5,
             _id: ObjectId(),
             author: "Simon Holmes",
-            timestamp: Date("Jul 16, 2013"),
+            createdOn: Date("Jul 16, 2013"),
             reviewText: "What a great place. I can't say enough good things about it"
         }
     }
@@ -67,7 +67,7 @@ db.locations.update({name: "Starcups"}, {
             rating: 3,
             _id: ObjectId(),
             author: "Simon Holmes",
-            timestamp: Date("Jul 17, 2013"),
+            createdOn: Date("Jul 17, 2013"),
             reviewText: "It was ok. Coffe wasn't great, but the wifi was fast."
         }
     }

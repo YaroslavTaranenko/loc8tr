@@ -34,6 +34,13 @@ var renderDetailPage = function(req, res, responseBody){
         //message: message
 	});
 };
+var renderReviewForm = function(req, res, responseBody){
+	res.render('location-review-form', {
+		title: 'Review ' + responseBody.name + ' on Loc8tr',
+		pageHeader: {title: "Reviews " + responseBody.name},
+		error: req.query.err
+	});
+};
 var _showError = function(req, res, status){
 	var title, content;
 	if(status === 404){
@@ -45,6 +52,23 @@ var _showError = function(req, res, status){
 	}
 	res.status = status;
 	res.render('generic-text', {title: title, content: content});
+};
+var getLocationInfo = function(req, res, callback){
+	var path = '/api/locations/' + req.params.locationid;
+	var requestOptions = {
+		url: apiOptions.server + path,
+		method: "GET",
+		json: {}
+	};
+	request(requestOptions, function(err, response, body){
+		var data = body;
+		//console.log('Status: ' + response.statusCode);
+		if(response.statusCode === 200){
+			callback(req, res, data);
+		}else{
+			_showError(req, res, response.statusCode);
+		}
+	});
 };
 module.exports.homelist = function(req, res){
 	var path = "/api/locations";
@@ -64,23 +88,37 @@ module.exports.homelist = function(req, res){
 };
 
 module.exports.locationInfo = function(req, res){
-	var path = "/api/locations/" + req.params.locationid;
-
-	var requestOptions = {
-		url: apiOptions.server + path,
-		method: "GET",
-		json: {},
-		qs: {}
-	};
-	request(requestOptions, function(err, response, body){
-		if(response.statusCode == 200){
-			renderDetailPage(req, res, body);			
-		}else{
-			_showError(req, res, response.statusCode);
-		}
+	getLocationInfo(req, res, function(req, res, responseData){
+		renderDetailPage(req, res,responseData);
 	});
 };
 
 module.exports.addReview = function(req, res){
-	res.render('location-review-form', {title: 'Add review'});
+	getLocationInfo(req, res, function(req, res, responseData){
+		renderReviewForm(req, res,responseData);
+	});
+};
+module.exports.doAddReview = function(req, res){
+	var locationid = req.params.locationid;
+	var path = '/api/locations/' + locationid + '/reviews';
+	var postData = {
+		author: req.body.name,
+		rating: parseInt(req.body.rating, 10),
+		reviewText: req.body.review
+	};
+	var requestOptions = {
+		url: apiOptions.server + path,
+		method: "POST",
+		json: postData
+	};
+	request(requestOptions, function(err, response, responseBody){
+		//console.log(req.body);
+		if(response.statusCode === 201){
+			res.redirect('/location/' + locationid);
+		}else if(response.statusCode === 400 && responseBody.name && responseBody.name === 'ValidationError'){
+			res.redirect('/location/' + locationid + '/review/new?err=val');
+		}else{
+			_showError(req, res, response.statusCode);
+		}
+	});
 };
