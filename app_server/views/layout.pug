@@ -1,5 +1,5 @@
 doctype html
-html
+html(ng-app="loc8trApp")
   head
     title= title
     meta(charset="utf-8")
@@ -26,7 +26,8 @@ html
           li.nav-item
             a(href="/about") About
     .container
-      block content
+      div(ng-view)
+        block content
 
 
       footer
@@ -35,3 +36,11 @@ html
             small &copy; Yaroslav Taranenko 2018
     
     script(src="/bootstrap/js/bootstrap.min.js" type="text/javascript")
+    script(src="/js/angular.min.js" type="text/javascript")
+    script(src="/lib/angular-route.min.js" type="text/javascript")
+    script(src="/app.js" type="text/javascript")
+    script(src="/home/home.controller.js" type="text/javascript")
+    script(src="/common/services/loc8trData.service.js" type="text/javascript")
+    script(src="/common/services/geolocation.service.js" type="text/javascript")
+    script(src="/common/filters/formatDistance.filter.js" type="text/javascript")
+    script(src="/common/directives/ratingStars/ratingStars.directive.js" type="text/javascript")

@@ -12,7 +12,7 @@ var renderHomePage = function(req, res, responseBody){
 			message: "No places found near you.";
 		}
 	}
-	res.status = 200;
+	
 	res.render('locations-list', {
 		title: 'Loc8tr - find a place to work with WIFI.',
 		pageHeader: {
@@ -20,8 +20,8 @@ var renderHomePage = function(req, res, responseBody){
 			strapline: "Find places to work with WIFI near you"
 		},
 		sidebar: "Looking for wifi and a seat? Loc8tr helps you find places to work when out and about. Perhaps with coffee, cake or pint? Let Loc8tr help you find the place you're looking for.",
-		locations: responseBody,
-		message: message
+		//locations: responseBody,
+		//message: message
 	});
 };
 var renderDetailPage = function(req, res, responseBody){
@@ -38,7 +38,8 @@ var renderReviewForm = function(req, res, responseBody){
 	res.render('location-review-form', {
 		title: 'Review ' + responseBody.name + ' on Loc8tr',
 		pageHeader: {title: "Reviews " + responseBody.name},
-		error: req.query.err
+		error: req.query.err,
+		url: req.originalUrl
 	});
 };
 var _showError = function(req, res, status){
@@ -76,11 +77,7 @@ module.exports.homelist = function(req, res){
 		url: apiOptions.server + path,
 		method: "GET",
 		json: {},
-		qs: {
-			lng: -0.7992599,
-			lat: 51.3780911,
-			maxDistance: 20
-		}
+		qs: {}
 	};
 	request(requestOptions, function(err, response, body){
 		renderHomePage(req, res, body);
