@@ -8,8 +8,12 @@ module.exports = function(grunt) {
   			'./app_server/views/*.pug', './public/css/style.css', './public/js/**/*.js', './public/js/*.js'
 
   			],
-		concat: ['./public/js/*.js', './public/js/**/*js'],
-		uglify: ['./public/js/app.concat.js']
+  		concat: {
+        serverApp: ['./public/js/*.js', './public/js/**/*js'],
+        spa: ['./app_client/app.js', './app_client/common/**/*.js', './app_client/common/*.js', 
+          './app_client/home/*.js']
+      },
+		  uglify: './app_client/app.concat.js'
   	},
   	express: {
 	    options: {
@@ -52,19 +56,23 @@ module.exports = function(grunt) {
     },
     concat: {
 	    options: {
-	      	separator: ';',
+	      	separator: '',
 	    },
 	    dist: {
-	      	src: ['<%= files.concat %>'],
-	      	dest: './public/js/app.concat.js',
+	      	src: ['<%= files.concat.spa %>'],
+	      	dest: './app_client/app.concat.js',
 	    },
-	},
-	uglify: {
-		options: {
-			mangle: false
-		},
-		files: {'./public/js/app.min.js': ['<%= files.uglify %>']}
-	},
+  	},
+  	uglify: {
+  		options: {
+  			mangle: false
+  		},
+      spa:{
+    		files: {
+          './app_client/app.min.js': ['./app_client/app.concat.js']
+        }
+      }
+  	},
     watch: {
     	options:{
     		livereload: true
@@ -81,13 +89,13 @@ module.exports = function(grunt) {
     		tasks: ['compass:dist']
     	},
     	concat: {
-    		files: ['<%= files.concat %>'],
+    		files: ['<%= files.concat.spa %>'],
     		tasks: ['concat:dist']
     	},
-    	uglify:{
+    	/*uglify:{
     		files: ['<%= files.uglify %>'],
-    		tasks: ['uglify']
-    	},
+    		tasks: ['uglify:spa']
+    	},*/
     	html: {
     		files: ['<%= files.livereload %>']
     	}
@@ -105,5 +113,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-html2js');
 
   grunt.registerTask('default', ['express:dev', 'watch']);
+  grunt.registerTask('uglify', ['uglify:spa']);
 
 };

@@ -1,3 +1,4 @@
+
 angular.module('loc8trApp', ['ngRoute']);
 
 function config($routeProvider){
@@ -9,6 +10,7 @@ function config($routeProvider){
 		})
 		.otherwise({redirectTo: '/'});
 };
+
 
 angular
 	.module('loc8trApp')

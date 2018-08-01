@@ -1,3 +1,4 @@
+
 function geolocation (){
 	var getPosition = function(cbSuccess, cbError, cbNoGeo){
 		if(navigator.geolocation){

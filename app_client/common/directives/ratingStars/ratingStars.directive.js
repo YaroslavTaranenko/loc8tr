@@ -6,7 +6,7 @@ var ratingStars = function(){
 		},
 		templateUrl: "/common/directives/ratingStars/rating-stars.template.html"
 
-	}
+	};
 };
 
 angular
